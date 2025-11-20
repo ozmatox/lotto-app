@@ -38,12 +38,11 @@ jobs:
     - name: Check virtualenv python
       run: venv/bin/python --version
 
-    # 7️⃣ Install Cython, Kivy and Buildozer
+    # 7️⃣ Install Buildozer, Kivy, and Cython in venv
     - name: Install Buildozer and dependencies
       run: |
         venv/bin/python -m pip install --upgrade pip
-        venv/bin/python -m pip install cython
-        venv/bin/python -m pip install kivy buildozer
+        venv/bin/python -m pip install cython kivy buildozer
 
     # 8️⃣ Debug: check Cython
     - name: Check Cython
@@ -52,6 +51,8 @@ jobs:
     # 9️⃣ Build APK
     - name: Build APK
       run: venv/bin/python -m buildozer android debug
+      env:
+        PATH: ${{ github.workspace }}/venv/bin:$PATH
 
     # 🔟 Upload APK artifact
     - name: Upload APK artifact
