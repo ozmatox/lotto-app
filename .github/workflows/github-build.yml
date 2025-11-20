@@ -13,7 +13,7 @@ jobs:
     # 1️⃣ Checkout repo
     - uses: actions/checkout@v4
 
-    # 2️⃣ Setup Python 3.10
+    # 2️⃣ Setup Python
     - name: Setup Python 3.10
       uses: actions/setup-python@v4
       with:
@@ -27,11 +27,11 @@ jobs:
           libtool pkg-config cmake libffi-dev libssl-dev libsqlite3-dev zlib1g-dev \
           python3-dev default-jdk curl
 
-    # 4️⃣ Remove old venv (czyszczenie)
+    # 4️⃣ Remove old venv
     - name: Remove old virtual environment
       run: rm -rf venv
 
-    # 5️⃣ Create virtual environment
+    # 5️⃣ Create venv
     - name: Create Python virtual environment
       run: python -m venv venv
 
@@ -39,21 +39,18 @@ jobs:
     - name: Upgrade pip
       run: venv/bin/python -m pip install --upgrade pip setuptools wheel
 
-    # 7️⃣ Install Buildozer, Cython, Kivy w venv
+    # 7️⃣ Install Buildozer and dependencies in venv
     - name: Install Buildozer and dependencies
       run: venv/bin/python -m pip install --no-cache-dir cython kivy buildozer
 
-    # 8️⃣ Debug: check Python and Cython
-    - name: Check Python and Cython
-      run: |
-        venv/bin/python --version
-        venv/bin/python -m cython --version
+    # 8️⃣ Set env variable to avoid --user
+    - name: Set PIP_USER env
+      run: echo "PIP_USER=0" >> $GITHUB_ENV
 
     # 9️⃣ Build APK
     - name: Build APK
       run: venv/bin/python -m buildozer android debug
       env:
-        PIP_USER: "0"           # 🔹 wyłącza --user
         PATH: /usr/bin:$PATH:venv/bin
 
     # 🔟 Upload APK artifact
