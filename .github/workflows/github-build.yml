@@ -26,17 +26,17 @@ jobs:
         sudo apt install -y git zip unzip openjdk-17-jdk autoconf automake \
             libtool pkg-config cmake libffi-dev libssl-dev libsqlite3-dev zlib1g-dev
 
-    # 4️⃣ Show which python is used (debug)
+    # 4️⃣ Debug: show python version
     - name: Show python version
       run: |
         python --version
         which python
 
-    # 5️⃣ Create virtualenv with setup-python python
+    # 5️⃣ Create virtualenv using Python 3.10
     - name: Create virtual environment
       run: python -m venv venv
 
-    # 6️⃣ Upgrade pip and install Buildozer
+    # 6️⃣ Install Buildozer, Kivy, Cython
     - name: Install Buildozer
       run: |
         venv/bin/python -m pip install --upgrade pip
