@@ -19,45 +19,47 @@ jobs:
       with:
         python-version: '3.10'
 
-    # 3️⃣ Install system dependencies (Git, Java, itp.)
+    # 3️⃣ Install system dependencies (Git, Java, Ant, SDK, etc.)
     - name: Install system dependencies
       run: |
         sudo apt update
         sudo apt install -y git zip unzip openjdk-17-jdk autoconf automake \
-          libtool pkg-config cmake libffi-dev libssl-dev libsqlite3-dev zlib1g-dev
+          libtool pkg-config cmake libffi-dev libssl-dev libsqlite3-dev zlib1g-dev \
+          python3-dev default-jdk curl
 
     # 4️⃣ Check Git
-    - name: Check Git
+    - name: Check Git version
       run: git --version
 
     # 5️⃣ Remove old venv (safety)
-    - name: Remove old venv
+    - name: Remove old virtual environment
       run: rm -rf venv
 
     # 6️⃣ Create virtual environment
-    - name: Create virtual environment
+    - name: Create Python virtual environment
       run: python -m venv venv
 
-    # 7️⃣ Debug: check python version
-    - name: Check virtualenv python
-      run: venv/bin/python --version
+    # 7️⃣ Upgrade pip inside venv
+    - name: Upgrade pip
+      run: venv/bin/python -m pip install --upgrade pip setuptools wheel
 
     # 8️⃣ Install Buildozer, Kivy, and Cython in venv
     - name: Install Buildozer and dependencies
       run: |
-        venv/bin/python -m pip install --upgrade pip
         venv/bin/python -m pip install cython kivy buildozer
 
-    # 9️⃣ Debug: check Cython
-    - name: Check Cython
-      run: venv/bin/python -m cython --version
+    # 9️⃣ Debug: check Python and Cython versions
+    - name: Check Python and Cython
+      run: |
+        venv/bin/python --version
+        venv/bin/python -m cython --version
 
     # 🔟 Build APK
     - name: Build APK
       run: venv/bin/python -m buildozer android debug
       env:
-        # najważniejsze: dodajemy Git i venv/bin do PATH
         PATH: /usr/bin:$PATH:${{ github.workspace }}/venv/bin
+        PIP_USER: "0"   # 👈 naprawia problem "--user" w p4a
 
     # 1️⃣1️⃣ Upload APK artifact
     - name: Upload APK artifact
