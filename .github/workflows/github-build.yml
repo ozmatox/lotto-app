@@ -56,7 +56,8 @@ jobs:
     - name: Build APK
       run: venv/bin/python -m buildozer android debug
       env:
-        PATH: ${{ github.workspace }}/venv/bin:$PATH
+        # najważniejsze: dodajemy Git i venv/bin do PATH
+        PATH: /usr/bin:$PATH:${{ github.workspace }}/venv/bin
 
     # 1️⃣1️⃣ Upload APK artifact
     - name: Upload APK artifact
