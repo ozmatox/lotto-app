@@ -19,42 +19,46 @@ jobs:
       with:
         python-version: '3.10'
 
-    # 3️⃣ Install system dependencies
+    # 3️⃣ Install system dependencies (Git, Java, itp.)
     - name: Install system dependencies
       run: |
         sudo apt update
         sudo apt install -y git zip unzip openjdk-17-jdk autoconf automake \
           libtool pkg-config cmake libffi-dev libssl-dev libsqlite3-dev zlib1g-dev
 
-    # 4️⃣ Remove old venv (safety)
+    # 4️⃣ Check Git
+    - name: Check Git
+      run: git --version
+
+    # 5️⃣ Remove old venv (safety)
     - name: Remove old venv
       run: rm -rf venv
 
-    # 5️⃣ Create virtual environment
+    # 6️⃣ Create virtual environment
     - name: Create virtual environment
       run: python -m venv venv
 
-    # 6️⃣ Debug: check python version
+    # 7️⃣ Debug: check python version
     - name: Check virtualenv python
       run: venv/bin/python --version
 
-    # 7️⃣ Install Buildozer, Kivy, and Cython in venv
+    # 8️⃣ Install Buildozer, Kivy, and Cython in venv
     - name: Install Buildozer and dependencies
       run: |
         venv/bin/python -m pip install --upgrade pip
         venv/bin/python -m pip install cython kivy buildozer
 
-    # 8️⃣ Debug: check Cython
+    # 9️⃣ Debug: check Cython
     - name: Check Cython
       run: venv/bin/python -m cython --version
 
-    # 9️⃣ Build APK
+    # 🔟 Build APK
     - name: Build APK
       run: venv/bin/python -m buildozer android debug
       env:
         PATH: ${{ github.workspace }}/venv/bin:$PATH
 
-    # 🔟 Upload APK artifact
+    # 1️⃣1️⃣ Upload APK artifact
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
