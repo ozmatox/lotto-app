@@ -10,36 +10,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # 1️⃣ Checkout repo
     - uses: actions/checkout@v4
 
+    # 2️⃣ Setup Python 3.10
     - name: Setup Python 3.10
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
+    # 3️⃣ Install system dependencies
     - name: Install system dependencies
       run: |
         sudo apt update
         sudo apt install -y git zip unzip openjdk-17-jdk autoconf automake \
           libtool pkg-config cmake libffi-dev libssl-dev libsqlite3-dev zlib1g-dev
 
+    # 4️⃣ Remove old venv (safety)
     - name: Remove old venv
       run: rm -rf venv
 
+    # 5️⃣ Create virtual environment
     - name: Create virtual environment
       run: python -m venv venv
 
+    # 6️⃣ Debug: check python version
     - name: Check virtualenv python
       run: venv/bin/python --version
 
+    # 7️⃣ Install Cython, Kivy and Buildozer
     - name: Install Buildozer and dependencies
       run: |
         venv/bin/python -m pip install --upgrade pip
-        venv/bin/python -m pip install cython kivy buildozer
+        venv/bin/python -m pip install cython
+        venv/bin/python -m pip install kivy buildozer
 
+    # 8️⃣ Debug: check Cython
+    - name: Check Cython
+      run: venv/bin/python -m cython --version
+
+    # 9️⃣ Build APK
     - name: Build APK
       run: venv/bin/python -m buildozer android debug
 
+    # 🔟 Upload APK artifact
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
