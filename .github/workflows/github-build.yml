@@ -10,10 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1️⃣ Checkout repo
-    - uses: actions/checkout@v4
+    # 1️⃣ Pobierz repozytorium
+    - name: Checkout repo
+      uses: actions/checkout@v4
 
-    # 2️⃣ Setup Python 3.10 (nie potrzebujemy systemowych paczek)
+    # 2️⃣ Setup Python 3.10
     - name: Setup Python 3.10
       uses: actions/setup-python@v4
       with:
@@ -26,15 +27,15 @@ jobs:
         sudo apt install -y git zip unzip openjdk-17-jdk autoconf automake \
             libtool pkg-config cmake libffi-dev libssl-dev libsqlite3-dev zlib1g-dev
 
-    # 4️⃣ Utwórz virtualenv w Python 3.10
+    # 4️⃣ Utwórz virtualenv na Pythonie 3.10
     - name: Create virtual environment
       run: python -m venv venv
 
     # 5️⃣ Zainstaluj pip, cython i buildozer
-    - name: Install buildozer
+    - name: Install Buildozer
       run: |
         ./venv/bin/python -m pip install --upgrade pip
-        ./venv/bin/python -m pip install cython buildozer
+        ./venv/bin/python -m pip install cython buildozer kivy
 
     # 6️⃣ Build APK
     - name: Build APK
