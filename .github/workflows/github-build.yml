@@ -24,8 +24,10 @@ jobs:
       run: python3 -m venv venv
 
     - name: Install buildozer
-      run: |
-        ./venv/bin/pip install --upgrade pip cython buildozer
+      run:
+       ./venv/bin/python -m pip install --upgrade pip
+       ./venv/bin/python -m pip install cython buildozer
+
 
     - name: Build APK
       run: |
