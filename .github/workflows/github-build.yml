@@ -13,7 +13,7 @@ jobs:
     # 1️⃣ Checkout repo
     - uses: actions/checkout@v4
 
-    # 2️⃣ Setup Python 3.10
+    # 2️⃣ Setup Python 3.10 (nie potrzebujemy systemowych paczek)
     - name: Setup Python 3.10
       uses: actions/setup-python@v4
       with:
@@ -23,13 +23,12 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt update
-        sudo apt install -y python3.10-venv python3.10-distutils python3-pip \
-            git zip unzip openjdk-17-jdk autoconf automake libtool pkg-config \
-            cmake libffi-dev libssl-dev libsqlite3-dev zlib1g-dev
+        sudo apt install -y git zip unzip openjdk-17-jdk autoconf automake \
+            libtool pkg-config cmake libffi-dev libssl-dev libsqlite3-dev zlib1g-dev
 
-    # 4️⃣ Utwórz virtualenv na Python 3.10
+    # 4️⃣ Utwórz virtualenv w Python 3.10
     - name: Create virtual environment
-      run: python3.10 -m venv venv
+      run: python -m venv venv
 
     # 5️⃣ Zainstaluj pip, cython i buildozer
     - name: Install buildozer
@@ -41,7 +40,7 @@ jobs:
     - name: Build APK
       run: ./venv/bin/python -m buildozer android debug
 
-    # 7️⃣ Upload APK
+    # 7️⃣ Upload APK artifact
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
