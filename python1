@@ -1,0 +1,28 @@
+import requests
+from kivy.app import App
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
+
+class MyApp(App):
+    def build(self):
+        layout = BoxLayout(orientation='vertical')
+        self.label = Label(text="Oczekiwanie na dane...")
+        layout.add_widget(self.label)
+
+        btn = Button(text="Pobierz dane z API")
+        btn.bind(on_press=self.get_data)
+        layout.add_widget(btn)
+
+        return layout
+
+    def get_data(self, instance):
+        url = "http://www.mbnet.com.pl/dl.txt"
+        response = requests.get(url)
+        if response.status_code == 200:
+            self.label.text = response.json()["data"]
+        else:
+            self.label.text = "Błąd pobierania danych"
+
+if __name__ == "__main__":
+    MyApp().run()

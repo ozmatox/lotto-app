@@ -1,0 +1,19 @@
+<LottoLayout>:
+    orientation: 'vertical'
+    padding: 20
+    spacing: 20
+
+    Label:
+        id: wyniki_label
+        text: "Kliknij przycisk, aby przeanalizować dane Lotto"
+        font_size: '16sp'
+        halign: 'center'
+        valign: 'middle'
+        text_size: self.size
+
+    Button:
+        text: "🔍 Analizuj losowania"
+        size_hint_y: None
+        height: 60
+        font_size: '20sp'
+        on_press: root.pokaz_analize()
