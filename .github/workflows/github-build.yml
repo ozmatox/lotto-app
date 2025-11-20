@@ -1,9 +1,9 @@
 name: Build Kivy Android APK
 
 on:
-  workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
       with:
         python-version: '3.10'
 
-    # 3️⃣ Install system dependencies (Git, Java, Ant, SDK, etc.)
+    # 3️⃣ Install system dependencies
     - name: Install system dependencies
       run: |
         sudo apt update
@@ -27,42 +27,37 @@ jobs:
           libtool pkg-config cmake libffi-dev libssl-dev libsqlite3-dev zlib1g-dev \
           python3-dev default-jdk curl
 
-    # 4️⃣ Check Git
-    - name: Check Git version
-      run: git --version
-
-    # 5️⃣ Remove old venv (safety)
+    # 4️⃣ Remove old venv (czyszczenie)
     - name: Remove old virtual environment
       run: rm -rf venv
 
-    # 6️⃣ Create virtual environment
+    # 5️⃣ Create virtual environment
     - name: Create Python virtual environment
       run: python -m venv venv
 
-    # 7️⃣ Upgrade pip inside venv
+    # 6️⃣ Upgrade pip + setuptools + wheel
     - name: Upgrade pip
       run: venv/bin/python -m pip install --upgrade pip setuptools wheel
 
-    # 8️⃣ Install Buildozer, Kivy, and Cython in venv
+    # 7️⃣ Install Buildozer, Cython, Kivy w venv
     - name: Install Buildozer and dependencies
-      run: |
-        venv/bin/python -m pip install cython kivy buildozer
+      run: venv/bin/python -m pip install --no-cache-dir cython kivy buildozer
 
-    # 9️⃣ Debug: check Python and Cython versions
+    # 8️⃣ Debug: check Python and Cython
     - name: Check Python and Cython
       run: |
         venv/bin/python --version
         venv/bin/python -m cython --version
 
-    # 🔟 Build APK
+    # 9️⃣ Build APK
     - name: Build APK
       run: venv/bin/python -m buildozer android debug
       env:
-        PATH: /usr/bin:$PATH:${{ github.workspace }}/venv/bin
-        PIP_USER: "0"   # 👈 naprawia problem "--user" w p4a
+        PIP_USER: "0"           # 🔹 wyłącza --user
+        PATH: /usr/bin:$PATH:venv/bin
 
-    # 1️⃣1️⃣ Upload APK artifact
-    - name: Upload APK artifact
+    # 🔟 Upload APK artifact
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: lotto-app-apk
