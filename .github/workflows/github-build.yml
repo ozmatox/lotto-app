@@ -8,10 +8,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
+    - name: Setup Git user
+      run: |
+       git config --global user.email "ozmatox@gmail.com"
+       git config --global user.name "ozmatox"
 
     - name: Install system dependencies
       run: |
