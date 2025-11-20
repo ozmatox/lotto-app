@@ -23,7 +23,7 @@ jobs:
         sudo apt install -y git zip unzip openjdk-17-jdk autoconf automake \
           libtool pkg-config cmake libffi-dev libssl-dev libsqlite3-dev zlib1g-dev
 
-    - name: Remove old venv (safety)
+    - name: Remove old venv
       run: rm -rf venv
 
     - name: Create virtual environment
@@ -32,10 +32,10 @@ jobs:
     - name: Check virtualenv python
       run: venv/bin/python --version
 
-    - name: Install Buildozer and Kivy
+    - name: Install Buildozer and dependencies
       run: |
         venv/bin/python -m pip install --upgrade pip
-        venv/bin/python -m pip install cython buildozer kivy
+        venv/bin/python -m pip install cython kivy buildozer
 
     - name: Build APK
       run: venv/bin/python -m buildozer android debug
