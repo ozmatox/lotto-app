@@ -8,15 +8,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
+    # 1️⃣ Pobierz repozytorium
     - name: Checkout repo
       uses: actions/checkout@v4
-    - name: Setup Git user
-      run: |
-       git config --global user.email "ozmatox@gmail.com"
-       git config --global user.name "ozmatox"
 
+    # 2️⃣ Zainstaluj zależności systemowe
     - name: Install system dependencies
       run: |
         sudo apt update
@@ -24,18 +22,22 @@ jobs:
             git zip unzip openjdk-17-jdk autoconf automake libtool pkg-config \
             cmake libffi-dev libssl-dev libsqlite3-dev zlib1g-dev
 
+    # 3️⃣ Utwórz virtualenv
     - name: Create virtual environment
       run: python3 -m venv venv
 
+    # 4️⃣ Zainstaluj pip, cython i buildozer
     - name: Install buildozer
       run: |
         ./venv/bin/python -m pip install --upgrade pip
         ./venv/bin/python -m pip install cython buildozer
 
+    # 5️⃣ Zbuduj APK
     - name: Build APK
       run: |
         ./venv/bin/python -m buildozer android debug
 
+    # 6️⃣ Zapisz APK jako artifact
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
